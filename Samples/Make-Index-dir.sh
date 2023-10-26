@@ -4,7 +4,7 @@ sdir=`pwd`
 sName=`basename $sdir`
 
 echo "<!DOCTYPE html>" > index.html
-echo "<html><head><meta charset="utf-8"><title>T depends</title><style>summary {text-decoration:underline;color:blue;font-weight:bold;padding:10px;} </style></head>" >> index.html
+echo "<html><head><meta charset="utf-8"><title>Molecelar dynamic modeling</title><style>summary {text-decoration:underline;color:blue;font-weight:bold;padding:10px;} </style></head>" >> index.html
 echo "<body>" >> index.html
 echo "<h3>Molecelar dynamic modeling of:</h3>" >> index.html
 
