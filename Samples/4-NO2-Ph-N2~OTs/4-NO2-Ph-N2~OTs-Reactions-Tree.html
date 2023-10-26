@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style> body { margin: 0; } </style>
+  <script src="http://unpkg.com/force-graph"></script>
+</head>
+<body>
+  <div id="graph"></div>
+
+  <script>
+    const imgs = ['ONO', 'ON(C1CCC2C1C2)O', 'NNC1CCC(CC1)N(O)O', 'ON(C1CCCCC1)O', 'NNC1CCCCC1', 'C1CCCCC1', 'CC1CCCCC1', 'OS(O)O', 'NN', 'CC1CCC(CC1)S(O)(O)O']
+      .map(src => {
+        const img = new Image();
+        img.src = `compounds/${src}.svg`;
+        img.smi = src;
+        return img;
+      });
+
+    const gData = {
+      nodes: imgs.map((img, id) => ({ id, img })),
+      links: [	{ source: 3, target: 2, reaction: 'ON(C1CCCCC1)O_+_NN_=_NNC1CCC(CC1)N(O)O' },
+	{ source: 8, target: 2, reaction: 'ON(C1CCCCC1)O_+_NN_=_NNC1CCC(CC1)N(O)O' },
+	{ source: 6, target: 9, reaction: 'CC1CCCCC1_+_OS(O)O_=_CC1CCC(CC1)S(O)(O)O' },
+	{ source: 7, target: 9, reaction: 'CC1CCCCC1_+_OS(O)O_=_CC1CCC(CC1)S(O)(O)O' },
+	{ source: 4, target: 2, reaction: 'NNC1CCCCC1_+_ONO_=_NNC1CCC(CC1)N(O)O' },
+	{ source: 0, target: 2, reaction: 'NNC1CCCCC1_+_ONO_=_NNC1CCC(CC1)N(O)O' },
+	{ source: 2, target: 3, reaction: 'NNC1CCC(CC1)N(O)O_=_ON(C1CCCCC1)O_+_NN' },
+	{ source: 2, target: 8, reaction: 'NNC1CCC(CC1)N(O)O_=_ON(C1CCCCC1)O_+_NN' },
+	{ source: 3, target: 1, reaction: 'ON(C1CCCCC1)O_=_ON(C1CCC2C1C2)O' },
+	{ source: 9, target: 6, reaction: 'CC1CCC(CC1)S(O)(O)O_=_CC1CCCCC1_+_OS(O)O' },
+	{ source: 9, target: 7, reaction: 'CC1CCC(CC1)S(O)(O)O_=_CC1CCCCC1_+_OS(O)O' },
+	{ source: 5, target: 3, reaction: 'C1CCCCC1_+_ONO_=_ON(C1CCCCC1)O' },
+	{ source: 0, target: 3, reaction: 'C1CCCCC1_+_ONO_=_ON(C1CCCCC1)O' },
+	{ source: 2, target: 4, reaction: 'NNC1CCC(CC1)N(O)O_=_NNC1CCCCC1_+_ONO' },
+	{ source: 2, target: 0, reaction: 'NNC1CCC(CC1)N(O)O_=_NNC1CCCCC1_+_ONO' },
+	{ source: 1, target: 3, reaction: 'ON(C1CCC2C1C2)O_=_ON(C1CCCCC1)O' },
+	{ source: 3, target: 5, reaction: 'ON(C1CCCCC1)O_=_C1CCCCC1_+_ONO' },
+	{ source: 3, target: 0, reaction: 'ON(C1CCCCC1)O_=_C1CCCCC1_+_ONO' },
+]
+    };
+
+    String.prototype.replaceAll = function(search, replacement) { return this.replace(new RegExp(search, 'g'), replacement); };
+    function Nclick(node) { window.open('compounds/'+encodeURI(node.img.smi)+'.html', '_blank').blur(); }
+    function Lclick(link) { window.open('reactions/'+encodeURI(link.reaction)+'.html', '_blank').blur(); }
+    function Ncolor() { return '#9900CC'; }
+    function Lcolor() { return '#003366'; }
+    function get_smi(node){ return node.img.smi;}
+    function get_reaction(link){ return link.reaction.replaceAll('_', ' '); }
+
+    const Graph = ForceGraph()
+      (document.getElementById('graph'))
+      .nodeCanvasObject(({ img, x, y }, ctx) => {
+        const size = 20;
+        ctx.drawImage(img, x - size / 2, y - size / 2, size, size);
+      })
+//      .nodePointerAreaPaint((node, color, ctx) => {
+//        const size = 20;
+//        ctx.fillStyle = color;
+//        ctx.fillRect(node.x - size / 2, node.y - size / 2, size, size); // draw square as pointer trap
+//      })
+      .nodeRelSize(4) // 4
+      .linkCurvature(0.05)
+      .linkDirectionalParticles(1.8)
+      .onNodeClick(node => { Graph.centerAt(node.x, node.y, 1000); Graph.zoom(8, 2000); })
+      .nodeColor(Ncolor)
+      .linkDirectionalArrowLength(2)
+      .linkColor(Lcolor)
+      .linkWidth(1)
+      .onNodeRightClick(Nclick)
+      .onLinkRightClick(Lclick)
+//      .backgroundColor('#CCFFCC')
+      .nodeLabel(get_smi)
+      .linkLabel(get_reaction)
+      .d3AlphaDecay(0.015)  // 0.0228
+      .d3VelocityDecay(0.5)  // 0.4
+      .graphData(gData);
+
+  </script>
+</body>
+</html>

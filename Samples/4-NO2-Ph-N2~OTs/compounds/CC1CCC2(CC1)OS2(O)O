@@ -1,0 +1,5 @@
+CC1=C[CH][C@]2([CH][CH]1)OS2([O])[O]
+CC1=C[CH][C@@]2(C=C1)OS2([O])[O]
+C[C]1[CH][CH][C@]2([CH][CH]1)OS2([O])[O]
+CC1=C[CH][C@@]2([CH][CH]1)OS2([O])[O]
+CC1=C[CH][C@]2(C=C1)OS2([O])[O]
